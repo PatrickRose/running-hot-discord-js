@@ -40,5 +40,8 @@ export async function execute(interaction: CommandInteraction) {
 
   return interaction.reply({
     content: `${(interaction.member as GuildMember).displayName} played ${cardId} (${playedCard})`,
+    files: [
+        `src/cards/images/${cardId}.jpg`
+    ]
   });
 }
