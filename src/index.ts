@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
 import { config } from "./config";
-import { commands } from "./commands";
+import { autoCompleteCommands, commands } from "./commands";
 import { deployCommands } from "./deploy-commands";
 import { runMigrations } from "./db";
 
@@ -25,6 +25,17 @@ client.on("interactionCreate", async (interaction) => {
   const { commandName } = interaction;
   if (commands[commandName as keyof typeof commands]) {
     commands[commandName as keyof typeof commands].execute(interaction);
+  }
+});
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isAutocomplete()) {
+    return;
+  }
+  const { commandName } = interaction;
+  if (autoCompleteCommands[commandName as keyof typeof autoCompleteCommands]) {
+    autoCompleteCommands[
+      commandName as keyof typeof autoCompleteCommands
+    ].autocomplete(interaction);
   }
 });
 
