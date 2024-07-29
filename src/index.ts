@@ -2,6 +2,7 @@ import { Client } from "discord.js";
 import { config } from "./config";
 import { commands } from "./commands";
 import { deployCommands } from "./deploy-commands";
+import {runMigrations} from "./db";
 
 const client = new Client({
   intents: ["Guilds", "GuildMessages", "DirectMessages"],
@@ -9,6 +10,8 @@ const client = new Client({
 
 client.once("ready", () => {
   console.log("Discord bot is ready! 🤖");
+  console.log("Running migrations...");
+  runMigrations().then(() => console.log('Migrations run!'));
 });
 
 client.on("guildCreate", async (guild) => {

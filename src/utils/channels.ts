@@ -1,6 +1,6 @@
-import {CategoryChannel, ChannelType, Guild} from "discord.js";
+import {CategoryChannel, ChannelType, Guild, PermissionsBitField} from "discord.js";
 
-export async function getCategory(guild: Guild, name: string): Promise<CategoryChannel> {
+export async function getCategory(guild: Guild, name: string, role: string, controlRole: string): Promise<CategoryChannel> {
     const channels = await guild.channels.fetch();
     const channel = channels.find(val => {
         if (val === null) {
@@ -17,6 +17,20 @@ export async function getCategory(guild: Guild, name: string): Promise<CategoryC
 
     return guild.channels.create({
         name,
-        type: ChannelType.GuildCategory
+        type: ChannelType.GuildCategory,
+        permissionOverwrites: [
+            {
+                id: guild.id,
+                deny: [PermissionsBitField.Flags.ViewChannel],
+            },
+            {
+                id: controlRole,
+                allow: [PermissionsBitField.Flags.ViewChannel],
+            },
+            {
+                id: role,
+                allow: [PermissionsBitField.Flags.ViewChannel],
+            }
+        ]
     })
 }

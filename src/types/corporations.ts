@@ -8,7 +8,7 @@ export const CORPORATION_NAMES: Record<Corporation, string> = {
     MCM: "McCullough Calibrated Mechanical"
 }
 
-const ALL_CORPORATIONS: Corporation[] = Object.keys(CORPORATION_NAMES) as Corporation[];
+export const ALL_CORPORATIONS: Corporation[] = Object.keys(CORPORATION_NAMES) as Corporation[];
 
 export function isCorporation(input: unknown): input is Corporation {
     if (typeof input != 'string') {
