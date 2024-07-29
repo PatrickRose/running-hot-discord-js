@@ -43,8 +43,43 @@ export const roles = db.define<RoleModel>("Roles", {
   },
 });
 
+export interface FacilityModel
+  extends Model<
+    InferAttributes<FacilityModel>,
+    InferCreationAttributes<FacilityModel>
+  > {
+  // Some fields are optional when calling UserModel.create() or UserModel.build()
+  guildId: string;
+  corporation: Corporation;
+  facilityName: string;
+  text: string;
+  voice: string;
+}
+
+export const facilities = db.define<FacilityModel>("Facilities", {
+  guildId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    primaryKey: true,
+  },
+  corporation: {
+    type: DataTypes.ENUM(...ALL_CORPORATIONS),
+    primaryKey: true,
+  },
+  facilityName: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+  },
+  text: {
+    type: DataTypes.STRING,
+  },
+  voice: {
+    type: DataTypes.STRING,
+  },
+});
+
 export async function runMigrations(): Promise<void> {
-  const models = [roles];
+  const models = [roles, facilities];
 
   for (let model of models) {
     await model.sync();

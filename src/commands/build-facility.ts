@@ -13,6 +13,7 @@ import { CORPORATION_NAMES, isCorporation } from "../types/corporations";
 import { getCategory } from "../utils/channels";
 import { getRoleForGuild } from "../utils/roles";
 import { roles } from "../db";
+import { buildFacility } from "../utils/facilities";
 
 export const data = new SlashCommandBuilder()
   .setName("build-facility")
@@ -71,42 +72,16 @@ export async function execute(interaction: CommandInteraction) {
 
   const guild = interaction.guild;
 
-  // Get the role for this corporation
-  const role = await getRoleForGuild(guild.id, corporation);
+  const result = await buildFacility(guild, corporation, facilityName);
 
-  if (role === null) {
-    return await interaction.reply({
-      content: `Unable to build facility, ${CORPORATION_NAMES[corporation]} does not have a configured role. Use /map-role to correct this`,
-      ephemeral: true,
-    });
+  if (result == true) {
+    return interaction.followUp(
+      `Built ${facilityName} for ${CORPORATION_NAMES[corporation]}`,
+    );
   }
 
-  const controlRole = await getRoleForGuild(guild.id, "control");
-
-  if (controlRole === null) {
-    return await interaction.reply({
-      content: `Unable to build facility, Control does not have a configured role. Use /map-role to correct this`,
-      ephemeral: true,
-    });
-  }
-
-  const category = await getCategory(
-    guild,
-    `runs-${corporation}`,
-    role,
-    controlRole,
-  );
-
-  await category.children.create<ChannelType.GuildText>({
-    name: facilityName,
-    type: ChannelType.GuildText,
+  return interaction.followUp({
+    content: result,
+    ephemeral: true,
   });
-  await category.children.create({
-    name: facilityName,
-    type: ChannelType.GuildVoice,
-  });
-
-  return interaction.followUp(
-    `Built ${facilityName} for ${CORPORATION_NAMES[corporation]}`,
-  );
 }
