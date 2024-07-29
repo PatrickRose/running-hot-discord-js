@@ -1,17 +1,20 @@
-import {Guild} from "discord.js";
-import {RoleModel, roles} from "../db";
+import { Guild } from "discord.js";
+import { RoleModel, roles } from "../db";
 
-export async function getRoleForGuild(guild: Guild["id"], corporation: RoleModel['corporation']): Promise<string | null> {
-    const row = await roles.findOne({
-        where: {
-            guildId: guild,
-            corporation: corporation
-        }
-    })
+export async function getRoleForGuild(
+  guild: Guild["id"],
+  corporation: RoleModel["corporation"],
+): Promise<string | null> {
+  const row = await roles.findOne({
+    where: {
+      guildId: guild,
+      corporation: corporation,
+    },
+  });
 
-    if (row === null) {
-        return null;
-    }
+  if (row === null) {
+    return null;
+  }
 
-    return row.roleId;
+  return row.roleId;
 }
