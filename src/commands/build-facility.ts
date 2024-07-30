@@ -10,9 +10,6 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { CORPORATION_NAMES, isCorporation } from "../types/corporations";
-import { getCategory } from "../utils/channels";
-import { getRoleForGuild } from "../utils/roles";
-import { roles } from "../db";
 import { buildFacility } from "../utils/facilities";
 
 export const data = new SlashCommandBuilder()
@@ -36,6 +33,12 @@ export const data = new SlashCommandBuilder()
     option
       .setName("facility-name")
       .setDescription("Name of facility")
+      .setRequired(true),
+  )
+  .addStringOption((option) =>
+    option
+      .setName("facility-type")
+      .setDescription("Type of facility")
       .setRequired(true),
   );
 
@@ -65,6 +68,15 @@ export async function execute(interaction: CommandInteraction) {
     });
   }
 
+  const facilityType = interaction.options.get("facility-type")?.value;
+
+  if (typeof facilityType != "string") {
+    return interaction.reply({
+      content: `\`${facilityType}\` was not set`,
+      ephemeral: true,
+    });
+  }
+
   await interaction.reply({
     content: `Building facility ${facilityName} for ${CORPORATION_NAMES[corporation]}...`,
     ephemeral: true,
@@ -72,7 +84,12 @@ export async function execute(interaction: CommandInteraction) {
 
   const guild = interaction.guild;
 
-  const result = await buildFacility(guild, corporation, facilityName);
+  const result = await buildFacility(
+    guild,
+    corporation,
+    facilityName,
+    facilityType,
+  );
 
   if (result == true) {
     return interaction.followUp(

@@ -1,20 +1,12 @@
 import {
   AutocompleteInteraction,
-  CategoryChannel,
-  CategoryChannelType,
   ChannelType,
   CommandInteraction,
-  GuildChannel,
-  GuildChannelTypes,
-  GuildMember,
-  PermissionsBitField,
   SlashCommandBuilder,
 } from "discord.js";
 import { CORPORATION_NAMES, isCorporation } from "../types/corporations";
-import { getCategory } from "../utils/channels";
-import { getRoleForGuild } from "../utils/roles";
-import { facilities, roles } from "../db";
-import { buildFacility } from "../utils/facilities";
+import { facilities } from "../db";
+import { destroyFacility } from "../utils/facilities";
 
 export const data = new SlashCommandBuilder()
   .setName("destroy-facility")
@@ -89,27 +81,15 @@ export async function execute(interaction: CommandInteraction) {
     });
   }
 
-  const facility = await facilities.findOne({
-    where: {
-      guildId: interaction.guildId,
-      corporation: corporation,
-      facilityName: facilityName,
-    },
-  });
+  const result = await destroyFacility(
+    interaction.guild,
+    corporation,
+    facilityName,
+  );
 
-  if (!facility) {
-    return interaction.reply({
-      content: `\`${facilityName}\` is not a valid facility name`,
-      ephemeral: true,
-    });
+  if (result === true) {
+    return await interaction.reply(`Destroyed ${facilityName}`);
   }
 
-  const { text, voice } = facility;
-
-  const channels = interaction.guild.channels;
-  await channels.delete(text);
-  await channels.delete(voice);
-  await facility.destroy();
-
-  return await interaction.reply(`Destroyed ${facilityName}`);
+  return await interaction.reply({ content: result, ephemeral: true });
 }

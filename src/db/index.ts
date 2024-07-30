@@ -52,6 +52,7 @@ export interface FacilityModel
   guildId: string;
   corporation: Corporation;
   facilityName: string;
+  facilityType: string;
   text: string;
   voice: string;
 }
@@ -69,6 +70,9 @@ export const facilities = db.define<FacilityModel>("Facilities", {
   facilityName: {
     type: DataTypes.STRING,
     primaryKey: true,
+  },
+  facilityType: {
+    type: DataTypes.STRING,
   },
   text: {
     type: DataTypes.STRING,

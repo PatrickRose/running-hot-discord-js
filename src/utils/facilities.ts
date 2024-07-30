@@ -8,6 +8,7 @@ export async function buildFacility(
   guild: Guild,
   corporation: Corporation,
   facilityName: string,
+  facilityType: string,
 ): Promise<true | string> {
   // Get the role for this corporation
   const role = await getRoleForGuild(guild.id, corporation);
@@ -42,9 +43,37 @@ export async function buildFacility(
     guildId: guild.id,
     corporation,
     facilityName,
+    facilityType,
     text: textChannel.id,
     voice: voiceChannel.id,
   });
+
+  return true;
+}
+
+export async function destroyFacility(
+  guild: Guild,
+  corporation: Corporation,
+  facilityName: string,
+): Promise<string | true> {
+  const facility = await facilities.findOne({
+    where: {
+      guildId: guild.id,
+      corporation: corporation,
+      facilityName: facilityName,
+    },
+  });
+
+  if (!facility) {
+    return `\`${facilityName}\` is not a valid facility name`;
+  }
+
+  const { text, voice } = facility;
+
+  const channels = guild.channels;
+  await channels.delete(text);
+  await channels.delete(voice);
+  await facility.destroy();
 
   return true;
 }
