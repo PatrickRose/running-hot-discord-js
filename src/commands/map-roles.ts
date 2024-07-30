@@ -11,6 +11,7 @@ import {
 import { CORPORATION_NAMES, isCorporation } from "../types/corporations";
 import { getCategory } from "../utils/channels";
 import { roles } from "../db";
+import { userIsControl } from "../utils/roles";
 
 export const data = new SlashCommandBuilder()
   .setName("map-roles")
@@ -46,6 +47,10 @@ export async function execute(interaction: CommandInteraction) {
       content: "Not run in a discord server",
       ephemeral: true,
     });
+  }
+
+  if (await !userIsControl(interaction.guild, interaction.member)) {
+    await interaction.reply("Resetting server, please wait...");
   }
 
   const corporation = interaction.options.get("corporation")?.value;

@@ -6,14 +6,19 @@ import {
 } from "discord.js";
 import { config } from "../config";
 import { commands } from "./index";
+import { userIsControl } from "../utils/roles";
 
 export const data = new SlashCommandBuilder()
   .setName("refresh")
   .setDescription("Refreshes commands");
 
 export async function execute(interaction: CommandInteraction) {
-  if (!interaction.guildId) {
+  if (!interaction.inGuild()) {
     return interaction.reply("Unable to refresh");
+  }
+
+  if (await !userIsControl(interaction.guildId, interaction.member)) {
+    await interaction.reply("Resetting server, please wait...");
   }
 
   const guildId = interaction.guildId;

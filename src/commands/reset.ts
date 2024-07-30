@@ -1,6 +1,6 @@
 import {
+  APIInteractionGuildMember,
   CommandInteraction,
-  GuildMember,
   SlashCommandBuilder,
 } from "discord.js";
 import { facilities, FacilityModel } from "../db";
@@ -11,6 +11,7 @@ import {
   CORPORATION_NAMES,
 } from "../types/corporations";
 import { InferAttributes } from "sequelize";
+import { userIsControl } from "../utils/roles";
 
 export const data = new SlashCommandBuilder()
   .setName("reset")
@@ -65,6 +66,10 @@ export async function execute(interaction: CommandInteraction) {
       content: "Not run in a discord server",
       ephemeral: true,
     });
+  }
+
+  if (await !userIsControl(interaction.guild, interaction.member)) {
+    await interaction.reply("Resetting server, please wait...");
   }
 
   await interaction.reply("Resetting server, please wait...");

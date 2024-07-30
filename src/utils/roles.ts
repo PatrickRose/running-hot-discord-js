@@ -1,4 +1,9 @@
-import { Guild } from "discord.js";
+import {
+  APIInteractionGuildMember,
+  Guild,
+  GuildMember,
+  Snowflake,
+} from "discord.js";
 import { RoleModel, roles } from "../db";
 
 export async function getRoleForGuild(
@@ -17,4 +22,26 @@ export async function getRoleForGuild(
   }
 
   return row.roleId;
+}
+
+export async function userIsControl(
+  guild: Guild | string,
+  member: GuildMember | APIInteractionGuildMember,
+): Promise<boolean> {
+  const controlRole = await getRoleForGuild(
+    typeof guild == "string" ? guild : guild.id,
+    "control",
+  );
+
+  if (!controlRole) {
+    return false;
+  }
+
+  const roles = member.roles;
+
+  if (Array.isArray(roles)) {
+    return roles.includes(controlRole);
+  }
+
+  return roles.cache.has(controlRole);
 }
