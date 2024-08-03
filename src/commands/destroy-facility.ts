@@ -6,8 +6,9 @@ import {
 } from "discord.js";
 import { CORPORATION_NAMES, isCorporation } from "../types/corporations";
 import { facilities } from "../db";
-import { destroyFacility } from "../utils/facilities";
+import { destroyFacility, makeEmbedsForGuild } from "../utils/facilities";
 import { userIsControl } from "../utils/roles";
+import { updateFacilityList } from "../utils/channels";
 
 export const data = new SlashCommandBuilder()
   .setName("destroy-facility")
@@ -93,6 +94,8 @@ export async function execute(interaction: CommandInteraction) {
   );
 
   if (result === true) {
+    await updateFacilityList(interaction.guild);
+
     return await interaction.reply(`Destroyed ${facilityName}`);
   }
 

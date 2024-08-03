@@ -4,7 +4,11 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { facilities, FacilityModel } from "../db";
-import { buildFacility, destroyFacility } from "../utils/facilities";
+import {
+  buildFacility,
+  destroyFacility,
+  makeEmbedsForGuild,
+} from "../utils/facilities";
 import {
   ALL_CORPORATIONS,
   Corporation,
@@ -12,6 +16,7 @@ import {
 } from "../types/corporations";
 import { InferAttributes } from "sequelize";
 import { userIsControl } from "../utils/roles";
+import { updateFacilityList } from "../utils/channels";
 
 export const data = new SlashCommandBuilder()
   .setName("reset")
@@ -110,6 +115,8 @@ export async function execute(interaction: CommandInteraction) {
     }
     await interaction.followUp(`Set up ${CORPORATION_NAMES[corporation]}!`);
   }
+
+  await updateFacilityList(interaction.guild);
 
   await interaction.followUp(`All done!`);
 }

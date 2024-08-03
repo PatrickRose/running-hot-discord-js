@@ -10,8 +10,9 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { CORPORATION_NAMES, isCorporation } from "../types/corporations";
-import { buildFacility } from "../utils/facilities";
+import { buildFacility, makeEmbedsForGuild } from "../utils/facilities";
 import { userIsControl } from "../utils/roles";
+import { updateFacilityList } from "../utils/channels";
 
 export const data = new SlashCommandBuilder()
   .setName("build-facility")
@@ -96,7 +97,9 @@ export async function execute(interaction: CommandInteraction) {
     facilityType,
   );
 
-  if (result == true) {
+  if (result === true) {
+    console.log(await updateFacilityList(guild));
+
     return interaction.followUp(
       `Built ${facilityName} for ${CORPORATION_NAMES[corporation]}`,
     );

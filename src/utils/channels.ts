@@ -4,6 +4,7 @@ import {
   Guild,
   PermissionsBitField,
 } from "discord.js";
+import { makeEmbedsForGuild } from "./facilities";
 
 export async function getCategory(
   guild: Guild,
@@ -42,4 +43,38 @@ export async function getCategory(
       },
     ],
   });
+}
+
+export async function getFacilityList(guild: Guild) {
+  const name = "facility-list";
+
+  const channels = await guild.channels.fetch();
+  const channel = channels.find((val) => {
+    if (val === null) {
+      return false;
+    }
+
+    return val.type === ChannelType.GuildText && val.name == name;
+  });
+
+  if (channel?.type == ChannelType.GuildText) {
+    return channel;
+  }
+
+  return null;
+}
+
+export async function updateFacilityList(guild: Guild) {
+  const channel = await getFacilityList(guild);
+
+  if (!channel || channel.type === ChannelType.GuildText) {
+    console.error("Did not find facility list");
+    return;
+  }
+
+  await channel.bulkDelete(await channel.messages.fetch());
+
+  const embeds = await makeEmbedsForGuild(guild);
+
+  return await channel.send({ embeds: Object.values(embeds) });
 }
