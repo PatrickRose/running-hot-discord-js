@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -49,6 +50,7 @@ export interface FacilityModel
     InferCreationAttributes<FacilityModel>
   > {
   // Some fields are optional when calling UserModel.create() or UserModel.build()
+  id: CreationOptional<number>;
   guildId: string;
   corporation: Corporation;
   facilityName: string;
@@ -57,30 +59,46 @@ export interface FacilityModel
   voice: string;
 }
 
-export const facilities = db.define<FacilityModel>("Facilities", {
-  guildId: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    primaryKey: true,
+export const facilities = db.define<FacilityModel>(
+  "Facilities",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    guildId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    corporation: {
+      type: DataTypes.ENUM(...ALL_CORPORATIONS),
+      allowNull: false,
+    },
+    facilityName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    facilityType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    text: {
+      type: DataTypes.STRING,
+    },
+    voice: {
+      type: DataTypes.STRING,
+    },
   },
-  corporation: {
-    type: DataTypes.ENUM(...ALL_CORPORATIONS),
-    primaryKey: true,
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ["guildId", "corporation", "facilityName"],
+      },
+    ],
   },
-  facilityName: {
-    type: DataTypes.STRING,
-    primaryKey: true,
-  },
-  facilityType: {
-    type: DataTypes.STRING,
-  },
-  text: {
-    type: DataTypes.STRING,
-  },
-  voice: {
-    type: DataTypes.STRING,
-  },
-});
+);
 
 export async function runMigrations(): Promise<void> {
   const models = [roles, facilities];

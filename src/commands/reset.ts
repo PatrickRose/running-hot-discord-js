@@ -26,7 +26,7 @@ const INITIAL_FACILITIES: Record<
   Corporation,
   Omit<
     InferAttributes<FacilityModel>,
-    "corporation" | "guildId" | "text" | "voice"
+    "id" | "corporation" | "guildId" | "text" | "voice"
   >[]
 > = {
   ANT: [
