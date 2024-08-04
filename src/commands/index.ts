@@ -5,6 +5,7 @@ import * as buildFacility from "./build-facility";
 import * as mapRoles from "./map-roles";
 import * as destroyFacility from "./destroy-facility";
 import * as reset from "./reset";
+import * as run from "./run";
 
 export const commands = {
   refresh,
@@ -14,7 +15,9 @@ export const commands = {
   "map-roles": mapRoles,
   "destroy-facility": destroyFacility,
   reset,
+  run,
 };
 export const autoCompleteCommands = {
   "destroy-facility": destroyFacility,
+  run,
 };

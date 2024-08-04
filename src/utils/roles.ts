@@ -45,3 +45,25 @@ export async function userIsControl(
 
   return roles.cache.has(controlRole);
 }
+export async function userIsOnRun(
+  guild: Guild,
+  member: GuildMember | APIInteractionGuildMember,
+): Promise<boolean> {
+  const roles = member.roles;
+
+  if (Array.isArray(roles)) {
+    for (let role of roles) {
+      const guildRole = await guild.roles.fetch(role);
+      if (!guildRole) {
+        continue;
+      }
+
+      if (guildRole.name.startsWith("run-")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  return roles.cache.find((val) => val.name.startsWith("run-")) !== undefined;
+}

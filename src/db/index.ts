@@ -1,9 +1,12 @@
 import {
+  Association,
   CreationOptional,
   DataTypes,
+  ForeignKey,
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
   Sequelize,
 } from "sequelize";
 import { ALL_CORPORATIONS, Corporation } from "../types/corporations";
@@ -57,6 +60,7 @@ export interface FacilityModel
   facilityType: string;
   text: string;
   voice: string;
+  Runs?: NonAttribute<Run[]>;
 }
 
 export const facilities = db.define<FacilityModel>(
@@ -100,10 +104,37 @@ export const facilities = db.define<FacilityModel>(
   },
 );
 
-export async function runMigrations(): Promise<void> {
-  const models = [roles, facilities];
+export class Run extends Model<
+  InferAttributes<Run>,
+  InferCreationAttributes<Model>
+> {
+  declare id: CreationOptional<number>;
+  declare roleId: string;
+  declare Facility?: NonAttribute<FacilityModel>;
+  declare FacilityId: ForeignKey<number>;
+}
 
-  for (let model of models) {
-    await model.sync();
-  }
+Run.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    roleId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize: db,
+    modelName: "Runs",
+  },
+);
+
+facilities.hasMany(Run);
+Run.belongsTo(facilities);
+
+export async function runMigrations(): Promise<void> {
+  await db.sync();
 }

@@ -1,5 +1,6 @@
 import {
   CommandInteraction,
+  DiscordAPIError,
   REST,
   Routes,
   SlashCommandBuilder,
