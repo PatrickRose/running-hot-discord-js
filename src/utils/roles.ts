@@ -27,14 +27,14 @@ export async function getRoleForGuild(
 export async function userIsControl(
   guild: Guild | string,
   member: GuildMember | APIInteractionGuildMember,
-): Promise<boolean> {
+): Promise<boolean | null> {
   const controlRole = await getRoleForGuild(
     typeof guild == "string" ? guild : guild.id,
     "control",
   );
 
   if (!controlRole) {
-    return false;
+    return null;
   }
 
   const roles = member.roles;

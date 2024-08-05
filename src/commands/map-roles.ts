@@ -49,7 +49,7 @@ export async function execute(interaction: CommandInteraction) {
     });
   }
 
-  if (await !userIsControl(interaction.guild, interaction.member)) {
+  if ((await userIsControl(interaction.guild, interaction.member)) === false) {
     await interaction.reply("Resetting server, please wait...");
   }
 
