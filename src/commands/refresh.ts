@@ -19,8 +19,10 @@ export async function execute(interaction: CommandInteraction) {
   }
 
   if (await !userIsControl(interaction.guildId, interaction.member)) {
-    await interaction.reply("Resetting server, please wait...");
+    return await interaction.reply("You are not control!");
   }
+
+  await interaction.deferReply();
 
   const guildId = interaction.guildId;
 
@@ -36,9 +38,9 @@ export async function execute(interaction: CommandInteraction) {
       },
     );
 
-    return interaction.reply("Successfully reloaded application commands.");
+    return interaction.editReply("Successfully reloaded application commands.");
   } catch (error) {
     console.error(error);
-    return interaction.reply("Unable to refresh");
+    return interaction.editReply("Unable to refresh");
   }
 }

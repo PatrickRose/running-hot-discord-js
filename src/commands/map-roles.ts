@@ -50,7 +50,7 @@ export async function execute(interaction: CommandInteraction) {
   }
 
   if ((await userIsControl(interaction.guild, interaction.member)) === false) {
-    await interaction.reply("Resetting server, please wait...");
+    return await interaction.reply("You are not control!");
   }
 
   const corporation = interaction.options.get("corporation")?.value;

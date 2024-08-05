@@ -74,7 +74,7 @@ export async function execute(interaction: CommandInteraction) {
   }
 
   if (await !userIsControl(interaction.guild, interaction.member)) {
-    await interaction.reply("Resetting server, please wait...");
+    return await interaction.reply("You are not control!");
   }
 
   await interaction.reply("Resetting server, please wait...");
