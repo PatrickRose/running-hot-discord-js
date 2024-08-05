@@ -60,7 +60,7 @@ export interface FacilityModel
   facilityType: string;
   text: string;
   voice: string;
-  Runs?: NonAttribute<Run[]>;
+  Run: NonAttribute<Run>;
 }
 
 export const facilities = db.define<FacilityModel>(
@@ -110,6 +110,8 @@ export class Run extends Model<
 > {
   declare id: CreationOptional<number>;
   declare roleId: string;
+  declare alerts: CreationOptional<number | null>;
+  declare cards: CreationOptional<number | null>;
   declare Facility?: NonAttribute<FacilityModel>;
   declare FacilityId: ForeignKey<number>;
 }
@@ -125,6 +127,14 @@ Run.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    alerts: {
+      type: DataTypes.NUMBER,
+      allowNull: true,
+    },
+    cards: {
+      type: DataTypes.NUMBER,
+      allowNull: true,
+    },
   },
   {
     sequelize: db,
@@ -132,7 +142,7 @@ Run.init(
   },
 );
 
-facilities.hasMany(Run);
+facilities.hasOne(Run);
 Run.belongsTo(facilities);
 
 export async function runMigrations(): Promise<void> {

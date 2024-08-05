@@ -139,11 +139,11 @@ export async function execute(interaction: CommandInteraction) {
         };
       }
 
-      if (facility.Runs && facility.Runs.length > 0) {
+      if (facility.Run) {
         return {
           error: false,
           facility,
-          result: facility.Runs[0],
+          result: facility.Run,
           created: false,
         };
       }

@@ -41,9 +41,7 @@ export async function execute(interaction: CommandInteraction) {
     include: Run,
   });
 
-  for (let facility of facilityToCheck.filter(
-    (facility) => (facility.Runs?.length ?? 0) > 0,
-  )) {
+  for (let facility of facilityToCheck.filter((facility) => facility.Run)) {
     const channel = await channels.fetch(facility.text);
     if (channel?.type == ChannelType.GuildText) {
       let messages = await channel.messages.fetch();
@@ -53,10 +51,9 @@ export async function execute(interaction: CommandInteraction) {
       }
     }
 
-    for (let run of facility.Runs ?? []) {
-      await guild.roles.delete(run.roleId);
-      await run.destroy();
-    }
+    let run = facility.Run;
+    await guild.roles.delete(run.roleId);
+    await run.destroy();
   }
 
   return interaction.editReply("Runs cleared");
