@@ -98,5 +98,6 @@ export async function execute(interaction: CommandInteraction) {
   await message.pin();
 
   return interaction.editReply(`Run started. Starting alerts for \`${runners}\` runners is \`${alerts}\`.
-Runners should now add their tags using \`/alert <num>\``);
+Runners should now add their tags using \`/alert <num>\`.
+When done, use \`/next-card\` to display first card`);
 }

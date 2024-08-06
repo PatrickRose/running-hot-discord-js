@@ -73,5 +73,6 @@ export async function execute(interaction: CommandInteraction) {
   await pinned.edit({ embeds: [embed] });
 
   return interaction.editReply(`\`${Math.abs(alerts)}\` alerts ${alerts < 0 ? "removed" : "added"}.
-New alert count is \`${run.alerts}\``);
+New alert count is \`${run.alerts}\`
+If you have an active card, click "Refresh" to update the bonus strength!`);
 }

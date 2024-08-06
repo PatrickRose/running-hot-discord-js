@@ -9,6 +9,8 @@ import * as run from "./run";
 import * as clearRuns from "./clear-runs";
 import * as startRun from "./start-run";
 import * as alert from "./alert";
+import * as nextCard from "./next-card";
+import * as previousCard from "./previous-card";
 
 export const commands = {
   refresh,
@@ -22,6 +24,8 @@ export const commands = {
   reset,
   run,
   alert,
+  "next-card": nextCard,
+  "previous-card": previousCard,
 };
 export const autoCompleteCommands = {
   "destroy-facility": destroyFacility,

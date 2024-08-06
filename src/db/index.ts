@@ -138,12 +138,53 @@ Run.init(
   },
   {
     sequelize: db,
-    modelName: "Runs",
+    modelName: "Run",
   },
 );
 
 facilities.hasOne(Run);
 Run.belongsTo(facilities);
+
+export class Card extends Model<
+  InferAttributes<Card>,
+  InferCreationAttributes<Card>
+> {
+  declare id: CreationOptional<number>;
+  declare position: number;
+  declare boost: number;
+  declare cardId: string;
+  declare Run?: NonAttribute<Run>;
+  declare RunId: ForeignKey<number>;
+}
+
+Card.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    cardId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    position: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+    },
+    boost: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize: db,
+    modelName: "Card",
+  },
+);
+
+Run.hasMany(Card);
+Card.belongsTo(Run);
 
 export async function runMigrations(): Promise<void> {
   await db.sync();
