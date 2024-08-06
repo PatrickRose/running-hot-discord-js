@@ -67,7 +67,7 @@ export async function getFacilityList(guild: Guild) {
 export async function updateFacilityList(guild: Guild) {
   const channel = await getFacilityList(guild);
 
-  if (!channel || channel.type === ChannelType.GuildText) {
+  if (channel?.type != ChannelType.GuildText) {
     console.error("Did not find facility list");
     return;
   }

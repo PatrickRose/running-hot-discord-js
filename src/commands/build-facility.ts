@@ -98,7 +98,7 @@ export async function execute(interaction: CommandInteraction) {
   );
 
   if (result === true) {
-    console.log(await updateFacilityList(guild));
+    await updateFacilityList(guild);
 
     return interaction.followUp(
       `Built ${facilityName} for ${CORPORATION_NAMES[corporation]}`,
